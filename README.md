@@ -9,7 +9,7 @@ Explore All of Spacetime
 This command serves the app at `http://localhost:8080` and provides basic URL
 routing for the app:
 
-    `polymer serve`
+    polymer serve
 
 
 ### Build
@@ -24,18 +24,18 @@ In addition the command also creates a fallback `build/bundled` folder,
 generated using fragment bundling, suitable for serving from non
 H2/push-compatible servers or to clients that do not support H2/Push.
 
-    `polymer build`
+    polymer build
 
 ### Test the build
 
 This command serves the minified version of the app in an unbundled state, as it would
 be served by a push-compatible server:
 
-    `polymer serve build/unbundled`
+    polymer serve build/unbundled
 
 This command serves the minified version of the app generated using fragment bundling:
 
-    `polymer serve build/bundled`
+    polymer serve build/bundled
 
 ### Extend
 
