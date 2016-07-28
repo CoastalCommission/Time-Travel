@@ -1,0 +1,90 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-theme.html">
+<link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-calendar.html">
+
+<dom-module id="coastal-time">
+
+  <template>
+
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      .card {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        margin: 24px;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #757575;
+      }
+      .circle {
+        display: inline-block;
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        background: #ddd;
+        line-height: 64px;
+        font-size: 30px;
+        color: #555;
+        text-align: center;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 16px 0;
+        color: #212121;
+      }
+
+      --fullcalendar {
+
+      }
+    </style>
+
+    <fullcalendar-calendar options="[[options]]"
+                           view="{{view}}"
+                           on-day-click="handleDayClick"
+                           on-event-click="handleEventClick">
+    </fullcalendar-calendar>
+
+  </template>
+
+    <script>
+        Polymer({
+            is: 'coastal-time',
+
+            options: {
+                header: false,
+                events: [
+                    { title: 'Discover fullcalendar-calendar', start: moment() },
+                    { title: 'Install fullcalendar-calendar', start: moment().add(2, 'day') },
+                    { title: 'Play around with fullcalendar-calendar', start: moment().add(4, 'days'), end: moment().add(5, 'days') },
+                    { title: 'Star fullcalendar-calendar on Github', start: moment().add(7, 'days'), end: moment().add(7, 'days').add(25, 'minutes') }
+                ]
+            },
+
+            changeView: function(event) {
+              this.changeView(event.target.attributes.getNamedItem('view').value);
+          },
+
+          previous: function() { this.previous(); },
+
+          next: function() { calendar.next(); },
+
+          handleDayClick: function() {
+              console.log(this);
+          }
+        });
+    </script>
+
+</dom-module>
