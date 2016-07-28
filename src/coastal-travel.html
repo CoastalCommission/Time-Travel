@@ -51,44 +51,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <fullcalendar-calendar options="[[options]]"
-                           view="{{view}}"
-                           on-day-click="handleDayClick"
-                           on-event-click="handleEventClick">
-    </fullcalendar-calendar>
+    <div id="calendar" hidden$="{{ selectedDay }}">
+        <fullcalendar-calendar options="[[ options ]]"
+                               view="{{ view }}"
+                               on-view-render="setTitle"
+                               on-day-click="handleDayClick"
+                               on-event-click="handleEventClick">
+        </fullcalendar-calendar>
+    </div>
+
+    <div id="day" hidden$="{{ !selectedDay }}">
+        <h1>{{ selectedDay }}</h1>
+
+        <button on-click="backToCalendar">Back</button>
+    </div>
 
   </template>
 
-  <script>
+    <script>
+        Polymer({
+            is: 'coastal-travel',
 
-    Polymer({
+            properties: {
+                selectedDay: String,
+                options: {
+                    header: false,
+                    events: [
+                        { title: 'Discover fullcalendar-calendar', start: moment() },
+                        { title: 'Install fullcalendar-calendar', start: moment().add(2, 'day') },
+                        { title: 'Play around with fullcalendar-calendar', start: moment().add(4, 'days'), end: moment().add(5, 'days') },
+                        { title: 'Star fullcalendar-calendar on Github', start: moment().add(7, 'days'), end: moment().add(7, 'days').add(25, 'minutes') }
+                    ]
+                }
+            },
 
-      is: 'coastal-travel',
-      
-      options: {
-          header: false,
-          events: [
-              { title: 'Discover fullcalendar-calendar', start: moment() },
-              { title: 'Install fullcalendar-calendar', start: moment().add(2, 'day') },
-              { title: 'Play around with fullcalendar-calendar', start: moment().add(4, 'days'), end: moment().add(5, 'days') },
-              { title: 'Star fullcalendar-calendar on Github', start: moment().add(7, 'days'), end: moment().add(7, 'days').add(25, 'minutes') }
-          ]
-      },
+            changeView: function(event) {
+                this.changeView(event.target.attributes.getNamedItem('view').value);
+            },
 
-      changeView: function(event) {
-            this.changeView(event.target.attributes.getNamedItem('view').value);
-        },
+            previous: function() { this.previous(); },
 
-        previous: function() { this.previous(); },
+            next: function() { calendar.next(); },
 
-        next: function() { calendar.next(); },
+            handleDayClick: function(event) {
+                this.selectedDay = event.detail.date;
+            },
 
-        handleDayClick: function() {
-            console.log(this);
-        }
+            setTitle: function(event) {
+                this.title = event.detail.view.title;
+                console.log(this.options);
+            },
 
-    });
-
-  </script>
-
+            backToCalendar: function(event) {
+                this.selectedDay = null;
+            }
+        });
+    </script>
 </dom-module>

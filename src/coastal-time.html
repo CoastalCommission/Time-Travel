@@ -53,6 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <fullcalendar-calendar options="[[options]]"
                            view="{{view}}"
+                           on-view-render="setTitle"
                            on-day-click="handleDayClick"
                            on-event-click="handleEventClick">
     </fullcalendar-calendar>
@@ -81,8 +82,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           next: function() { calendar.next(); },
 
-          handleDayClick: function() {
-              console.log(this);
+          handleDayClick: function(event) {
+              console.log(event);
+          },
+
+          setTitle: function(event) {
+            this.title = event.detail.view.title;
+            console.log(event);
           }
         });
     </script>
