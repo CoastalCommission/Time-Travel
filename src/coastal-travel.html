@@ -9,6 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-theme.html">
+<link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-calendar.html">
 
 <dom-module id="coastal-travel">
 
@@ -43,13 +45,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 16px 0;
         color: #212121;
       }
+
+      --fullcalendar {
+
+      }
     </style>
 
-    <div class="card">
-      <h1>Travel</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>
+    <fullcalendar-calendar options="[[options]]"
+                           view="{{view}}"
+                           on-day-click="handleDayClick"
+                           on-event-click="handleEventClick">
+    </fullcalendar-calendar>
 
   </template>
 
@@ -57,7 +63,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'coastal-travel'
+      is: 'coastal-travel',
+      
+      options: {
+          header: false,
+          events: [
+              { title: 'Discover fullcalendar-calendar', start: moment() },
+              { title: 'Install fullcalendar-calendar', start: moment().add(2, 'day') },
+              { title: 'Play around with fullcalendar-calendar', start: moment().add(4, 'days'), end: moment().add(5, 'days') },
+              { title: 'Star fullcalendar-calendar on Github', start: moment().add(7, 'days'), end: moment().add(7, 'days').add(25, 'minutes') }
+          ]
+      },
+
+      changeView: function(event) {
+            this.changeView(event.target.attributes.getNamedItem('view').value);
+        },
+
+        previous: function() { this.previous(); },
+
+        next: function() { calendar.next(); },
+
+        handleDayClick: function() {
+            console.log(this);
+        }
 
     });
 
