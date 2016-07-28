@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div id="calendar" hidden$="{{ selectedDay }}">
+    <div id="calendar" class="card" hidden$="{{ selectedDay }}">
         <fullcalendar-calendar options="[[ options ]]"
                                view="{{ view }}"
                                on-view-render="setTitle"
@@ -60,10 +60,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </fullcalendar-calendar>
     </div>
 
-    <div id="day" hidden$="{{ !selectedDay }}">
-        <h1>{{ selectedDay }}</h1>
-
+    <div id="day" class="card" hidden$="{{ !selectedDay }}">
         <button on-click="backToCalendar">Back</button>
+
+        <h1>{{ selectedDay }}</h1>
     </div>
 
   </template>
@@ -91,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             previous: function() { this.previous(); },
 
-            next: function() { calendar.next(); },
+            next: function() { this.next(); },
 
             handleDayClick: function(event) {
                 this.selectedDay = event.detail.date;
