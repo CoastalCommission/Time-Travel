@@ -41,28 +41,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             .drawer-list {
-                margin: 0 20px;
+                margin: 0;
             }
 
             .drawer-list a {
-                display: block;
-                padding: 0 16px;
+                display: inline;
+                padding: 0;
                 line-height: 40px;
                 text-decoration: none;
-                color: var(--app-secondary-color);
+                color: white;
             }
 
             .drawer-list a.iron-selected {
-                color: black;
+                color: white;
                 font-weight: bold;
             }
 
-            .drawer-list a.subroute {
-                padding-left: 32px;
-            }
-
-            iron-icon {
-                background-color: #e3e3e3;
+            paper-icon-button {
+                background-color: rgba(255, 255, 255, 0.25);
                 border-radius: 50%;
                 margin-right: 1.1vw;
             }
@@ -77,30 +73,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-route>
 
         <app-drawer-layout fullbleed>
-            <!-- Drawer content -->
-            <app-drawer>
-                <app-toolbar>Explore</app-toolbar>
-
-                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    <a name="coastal-time" href="/coastal-time">
-                        <iron-icon icon="maps:directions-bus"></iron-icon>
-                        Time
-                    </a>
-
-                    <a name="coastal-travel" href="/coastal-travel">
-                        <iron-icon icon="maps:directions-bus"></iron-icon>
-                        Travel
-                    </a>
-                </iron-selector>
-            </app-drawer>
-
             <!-- Main content -->
             <app-header-layout has-scrolling-region>
                 <app-header condenses reveals effects="waterfall">
                     <app-toolbar>
-                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+                        <paper-icon-button icon="blur"></paper-icon-button>
 
-                        <div title>Time Travel</div>
+                        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                            <!-- <div title> -->
+                                <a name="coastal-time" href="/coastal-time">Time</a>
+
+                                <a name="coastal-travel" href="/coastal-travel">Travel</a>
+                             <!-- </div> -->
+                        </iron-selector>
+
                     </app-toolbar>
                 </app-header>
 
