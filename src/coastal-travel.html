@@ -11,6 +11,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-theme.html">
 <link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-calendar.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
 
 <dom-module id="coastal-travel">
 
@@ -44,6 +54,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-size: 22px;
         margin: 16px 0;
         color: #212121;
+        text-align: center;
       }
 
       --fullcalendar {
@@ -51,7 +62,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div id="calendar" class="card" hidden$="{{ selectedDay }}">
+    <div id="calendar" class="card" hidden$="{{  }}">
         <fullcalendar-calendar options="[[ options ]]"
                                view="{{ view }}"
                                on-view-render="setTitle"
@@ -60,11 +71,68 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </fullcalendar-calendar>
     </div>
 
-    <div id="day" class="card" hidden$="{{ !selectedDay }}">
-        <button on-click="backToCalendar">Back</button>
-
+    <paper-dialog id="dialog"
+                  entry-animation="scale-up-animation"
+                  exit-animation="scale-down-animation">
         <h1>{{ selectedDay }}</h1>
-    </div>
+
+        <form is="iron-form"
+              id="pca"
+              method="POST"
+              action="">
+
+              <paper-dropdown-menu label="Project Code (PCA)">
+                <paper-listbox class="dropdown-content">
+                  <paper-item>allosaurus</paper-item>
+                  <paper-item>brontosaurus</paper-item>
+                  <paper-item>carcharodontosaurus</paper-item>
+                  <paper-item>diplodocus</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+
+              <paper-dropdown-menu label="Start Time">
+                <paper-listbox class="dropdown-content">
+                  <paper-item>5:00 am</paper-item>
+                  <paper-item>6:00 am</paper-item>
+                  <paper-item>7:00 am</paper-item>
+                  <paper-item>8:00 am</paper-item>
+                  <paper-item>9:00 am</paper-item>
+                  <paper-item>10:00 am</paper-item>
+                  <paper-item>11:00 am</paper-item>
+                  <paper-item>12:00 pm</paper-item>
+                  <paper-item>1:00 pm</paper-item>
+                  <paper-item>2:00 pm</paper-item>
+                  <paper-item>3:00 pm</paper-item>
+                  <paper-item>4:00 pm</paper-item>
+                  <paper-item>5:00 pm</paper-item>
+                  <paper-item>6:00 pm</paper-item>
+                  <paper-item>7:00 pm</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+
+              <paper-dropdown-menu label="End Time">
+                <paper-listbox class="dropdown-content">
+                  <paper-item>5:00 am</paper-item>
+                  <paper-item>6:00 am</paper-item>
+                  <paper-item>7:00 am</paper-item>
+                  <paper-item>8:00 am</paper-item>
+                  <paper-item>9:00 am</paper-item>
+                  <paper-item>10:00 am</paper-item>
+                  <paper-item>11:00 am</paper-item>
+                  <paper-item>12:00 pm</paper-item>
+                  <paper-item>1:00 pm</paper-item>
+                  <paper-item>2:00 pm</paper-item>
+                  <paper-item>3:00 pm</paper-item>
+                  <paper-item>4:00 pm</paper-item>
+                  <paper-item>5:00 pm</paper-item>
+                  <paper-item>6:00 pm</paper-item>
+                  <paper-item>7:00 pm</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+
+              <paper-input label="Description"></paper-input>
+        </form>
+    </paper-dialog>
 
   </template>
 
@@ -73,7 +141,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             is: 'coastal-travel',
 
             properties: {
-                selectedDay: String,
+                selectedDay: {
+                    type: String,
+                    value: null
+                },
                 options: {
                     header: false,
                     events: [
@@ -94,6 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             next: function() { this.next(); },
 
             handleDayClick: function(event) {
+                Polymer.dom(this.root).querySelector('#dialog').open();
                 this.selectedDay = event.detail.date;
             },
 
