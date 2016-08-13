@@ -1,6 +1,8 @@
 # Time-Travel
 Explore All of Spacetime
 
+![Time-Travel](https://github.com/CoastalCommission/Time-Travel/blob/master/images/screenshot.png?raw=true)
+
 ### Setup
 
 
