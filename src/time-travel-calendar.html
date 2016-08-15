@@ -17,14 +17,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-down-animation.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <dom-module id="time-travel-calendar">
     <template>
@@ -130,11 +131,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div> <!-- end .actions -->
 
         <div id="calendar" class="card">
-            <fullcalendar-calendar options="[[ options ]]"
+            <fullcalendar-calendar options="{{ options }}"
                                    view="{{ view }}"
                                    on-view-render="setTitle"
-                                   on-day-click="handleDayClick"
-                                   on-event-click="handleEventClick">
+                                   on-day-click="addTime"
+                                   on-event-click="editTime">
             </fullcalendar-calendar>
         </div> <!-- end #calendar -->
 
@@ -144,11 +145,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <h1>{{ dialogTitle }}</h1>
 
             <form is="iron-form"
-                  id="pca"
+                  id="timeForm"
                   method="POST"
                   action="">
 
-                <paper-dropdown-menu label="Project Code (PCA)">
+                <paper-dropdown-menu label="Project Code (PCA)" id="pca">
                     <paper-listbox class="dropdown-content">
                         <template is="dom-repeat" items="{{ pca }}">
                             <paper-item>
@@ -158,23 +159,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     </paper-listbox>
                 </paper-dropdown-menu>
 
-                <paper-dropdown-menu label="Start Time">
+                <paper-dropdown-menu label="Start Time" id="startTime">
                     <paper-listbox class="dropdown-content">
                         <template is="dom-repeat" items="{{ hours }}">
-                            <paper-item>{{ item.hour }}</paper-item>
+                            <paper-item>{{ index }}</paper-item>
                         </template>
                     </paper-listbox>
                 </paper-dropdown-menu>
 
-                <paper-dropdown-menu label="End Time">
+                <paper-dropdown-menu label="End Time" id="endTime">
                     <paper-listbox class="dropdown-content">
                         <template is="dom-repeat" items="{{ hours }}">
-                            <paper-item>{{ item.hour }}</paper-item>
+                            <paper-item>{{ index }}</paper-item>
                         </template>
                     </paper-listbox>
                 </paper-dropdown-menu>
 
-                <paper-input label="Description"></paper-input>
+                <paper-input label="Description" id="description"></paper-input>
+
+                <paper-button raised on-click="submitTime">Save</paper-button>
             </form>
         </paper-dialog>
     </template>
@@ -199,13 +202,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     value: {
                         header: false,
                         events: [
-                            { title: '1900', start: moment() }
+                            { title: 'General Administration', start: moment() }
                         ]
                     }
                 },
                 selectedViewIcon: {
                     type: String,
                     value: 'view-module'
+                },
+                newTime: {
+                    type: Object,
+                    value: {}
                 },
                 pca: {
                     type: Array,
@@ -218,7 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             changeView: function(event) {
-                var selectedView = event.target.attributes.getNamedItem('view').value,
+                var selectedView     = event.target.attributes.getNamedItem('view').value,
                     selectedViewIcon = event.target.attributes.getNamedItem('icon').value;
 
                 this.calendar.changeView(selectedView);
@@ -231,18 +238,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             jumpToToday: function(event) { console.log(event); },
 
-            handleDayClick: function(event) {
-                Polymer.dom(this.root).querySelector('#dialog').open();
-                this.dialogTitle = 'Add Time';
-                // event.detail.date._d
-            },
-
-            handleEventClick: function(event) {
-                Polymer.dom(this.root).querySelector('#dialog').open();
-                this.dialogTitle = 'Edit Time';
-                // event.detail.event.title
-            },
-
             setTitle: function(event) {
                 this.title = event.detail.view.title;
             },
@@ -253,6 +248,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             aquireHours: function(hours) {
                 this.hours = hours.detail.response;
+            },
+
+            addTime: function(event) {
+                var date = moment(event.detail.date).format('MMM DD, YYYY');
+
+                Polymer.dom(this.root).querySelector('#dialog').open();
+                this.dialogTitle = 'Add New Time on ' + date;
+                this.newTime.date = event.detail.date;
+            },
+
+            editTime: function(event) {
+                var date = moment(event.detail.date).format('MMM DD, YYYY');
+
+                Polymer.dom(this.root).querySelector('#dialog').open();
+                this.dialogTitle = 'Edit ' + event.detail.event.title + ' Time on ' + date;
+            },
+
+            submitTime: function(event) {
+                this.newTime.title       = this.$.pca.value;
+                this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value);
+                this.newTime.end         = moment(this.newTime.date).hour(this.$.endTime.value);
+                this.newTime.description = this.$.description.value;
+
+                this.options.events.push(this.newTime);
+                console.log(this.options.events);
+
+                // Polymer.dom(event).localTarget.parentElement.submit();
             }
         });
     </script>
