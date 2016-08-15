@@ -29,56 +29,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="time-travel-calendar">
     <template>
         <style include="iron-flex">
-        :host {
-        display: block;
-        padding: 10px;
-        }
-        .card {
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-        padding: 16px;
-        margin: 0 24px 24px 24px;
-        border-radius: 5px;
-        background-color: #fff;
-        color: #757575;
-        }
-        .circle {
-        display: inline-block;
-        height: 64px;
-        width: 64px;
-        border-radius: 50%;
-        background: #ddd;
-        line-height: 64px;
-        font-size: 30px;
-        color: #555;
-        text-align: center;
-        }
-        h1.title {
-        font-size: 22px;
-        font-weight: 100;
-        margin: 0 0 16px 0;
-        color: #212121;
-        }
+            :host {
+                display: block;
+                padding: 10px;
+            }
 
-        iron-icon,
-        [icon] {
-          color: rgba(0, 0, 0, 0.6);
-        }
+            .card {
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                padding: 16px;
+                margin: 0 24px 24px 24px;
+                border-radius: 5px;
+                background-color: #fff;
+                color: #757575;
+            }
 
-        .dropdown-content iron-icon {
-          padding-right: 15px;
-        }
+            .circle {
+                display: inline-block;
+                height: 64px;
+                width: 64px;
+                border-radius: 50%;
+                background: #ddd;
+                line-height: 64px;
+                font-size: 30px;
+                color: #555;
+                text-align: center;
+            }
 
-        paper-menu-button {
-          padding: 0;
-        }
+            h1.title {
+                font-size: 22px;
+                font-weight: 100;
+                margin: 0 0 16px 0;
+                color: #212121;
+            }
 
-        .actions {
-          margin: 0 24px 0 11px;
-        }
+            iron-icon,
+            [icon] {
+              color: rgba(0, 0, 0, 0.6);
+            }
 
-        --fullcalendar {
+            .dropdown-content iron-icon {
+              padding-right: 15px;
+            }
 
-        }
+            paper-menu-button {
+              padding: 0;
+            }
+
+            .actions {
+              margin: 0 24px 0 11px;
+            }
+
+            --fullcalendar {
+
+            }
         </style>
 
         <iron-ajax auto
@@ -105,17 +108,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button icon="search"></paper-icon-button>
 
             <paper-menu-button>
-                <paper-icon-button icon="view-module" class="dropdown-trigger"></paper-icon-button>
+                <paper-icon-button icon="{{ selectedViewIcon }}" class="dropdown-trigger"></paper-icon-button>
 
                 <paper-menu class="dropdown-content" selected="0">
-                    <paper-item view="month" on-tap="changeView">
-                        <iron-icon icon="view-module"></iron-icon> Month
+                    <paper-item view="month" icon="view-module" on-tap="changeView">
+                        <iron-icon icon="view-module" view="month"></iron-icon> Month
                     </paper-item>
-                    <paper-item view="agendaWeek" on-tap="changeView">
-                        <iron-icon icon="view-week"></iron-icon> Week
+
+                    <paper-item view="agendaWeek" icon="view-week" on-tap="changeView">
+                        <iron-icon icon="view-week" view="agendaWeek"></iron-icon> Week
                     </paper-item>
-                    <paper-item view="agendaDay" on-tap="changeView">
-                        <iron-icon icon="view-day"></iron-icon> Day
+
+                    <paper-item view="agendaDay" icon="view-day" on-tap="changeView">
+                        <iron-icon icon="view-day" view="agendaDay"></iron-icon> Day
                     </paper-item>
                 </paper-menu>
             </paper-menu-button>
@@ -197,6 +202,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         ]
                     }
                 },
+                selectedViewIcon: {
+                    type: String,
+                    value: 'view-module'
+                },
                 pca: {
                     type: Array,
                     value: null
@@ -208,8 +217,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             changeView: function(event) {
-                var selectedView = event.target.attributes.getNamedItem('view').value;
+                var selectedView = event.target.attributes.getNamedItem('view').value,
+                    selectedViewIcon = event.target.attributes.getNamedItem('icon').value;
+
                 this.calendar.changeView(selectedView);
+                this.selectedViewIcon = selectedViewIcon;
             },
 
             previous: function() { this.calendar.previous(); },
