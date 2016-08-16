@@ -11,8 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-theme.html">
 <link rel="import" href="../bower_components/fullcalendar-calendar/fullcalendar-calendar.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
@@ -21,15 +19,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/scale-down-animation.html">
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+
 
 <dom-module id="time-travel-calendar">
     <template>
-        <style include="iron-flex">
+        <style include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
                 padding: 10px;
@@ -81,6 +83,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               margin: 0 24px 0 11px;
             }
 
+            #arrow {
+                margin: 5%;
+            }
+
             --fullcalendar {
 
             }
@@ -127,7 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </paper-menu>
             </paper-menu-button>
 
-            <paper-icon-button icon="today" on-tap="jumpToToday"></paper-icon-button>
+            <paper-icon-button icon="today" on-tap="gotoToday"></paper-icon-button>
         </div> <!-- end .actions -->
 
         <div id="calendar" class="card">
@@ -149,35 +155,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   method="POST"
                   action="">
 
-                <paper-dropdown-menu label="Project Code (PCA)" id="pca">
-                    <paper-listbox class="dropdown-content">
-                        <template is="dom-repeat" items="{{ pca }}">
-                            <paper-item>
-                                {{ item.title }}
-                            </paper-item>
-                        </template>
-                    </paper-listbox>
-                </paper-dropdown-menu>
+                <div class="layout horizontal">
+                    <paper-dropdown-menu label="Project Code (PCA)" id="pca" class="flex">
+                        <paper-listbox class="dropdown-content">
+                            <template is="dom-repeat" items="{{ pca }}">
+                                <paper-item>
+                                    {{ item.title }} ({{ item.pca }})
+                                </paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                </div> <!-- end layout -->
 
-                <paper-dropdown-menu label="Start Time" id="startTime">
-                    <paper-listbox class="dropdown-content">
-                        <template is="dom-repeat" items="{{ hours }}">
-                            <paper-item>{{ index }}</paper-item>
-                        </template>
-                    </paper-listbox>
-                </paper-dropdown-menu>
+                <div class="layout horizontal">
+                    <paper-dropdown-menu label="Start Time" id="startTime" class="flex">
+                        <paper-listbox class="dropdown-content">
+                            <template is="dom-repeat" items="{{ hours }}">
+                                <paper-item>{{ index }}</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
 
-                <paper-dropdown-menu label="End Time" id="endTime">
-                    <paper-listbox class="dropdown-content">
-                        <template is="dom-repeat" items="{{ hours }}">
-                            <paper-item>{{ index }}</paper-item>
-                        </template>
-                    </paper-listbox>
-                </paper-dropdown-menu>
+                    <iron-icon icon="arrow-forward" id="arrow"></iron-icon>
 
-                <paper-input label="Description" id="description"></paper-input>
+                    <paper-dropdown-menu label="End Time" id="endTime" class="flex">
+                        <paper-listbox class="dropdown-content">
+                            <template is="dom-repeat" items="{{ hours }}">
+                                <paper-item>{{ index }}</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                </div> <!-- end layout -->
 
-                <paper-button raised on-click="submitTime">Save</paper-button>
+                <paper-input label="Description" id="description" maxlength="300"></paper-input>
+
+                <div class="buttons">
+                    <paper-button dialog-dismiss>Cancel</paper-button>
+                    <paper-button dialog-confirm on-click="submitTime">Save</paper-button>
+                </div>
             </form>
         </paper-dialog>
     </template>
@@ -224,30 +239,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             },
 
+            previous: function() { this.calendar.previous(); },
+
+            next: function() { this.calendar.next(); },
+
+            setTitle: function(event) { this.title = event.detail.view.title; },
+
+            aquirePCA: function(pca) { this.pca = pca.detail.response; },
+
+            aquireHours: function(hours) { this.hours = hours.detail.response; },
+
+            gotoToday: function(event) { this.calendar.today(); },
+
+            gotoDate: function(date) { this.calendar.gotoDate(date); },
+
             changeView: function(event) {
                 var selectedView     = event.target.attributes.getNamedItem('view').value,
                     selectedViewIcon = event.target.attributes.getNamedItem('icon').value;
 
                 this.calendar.changeView(selectedView);
                 this.selectedViewIcon = selectedViewIcon;
-            },
-
-            previous: function() { this.calendar.previous(); },
-
-            next: function() { this.calendar.next(); },
-
-            jumpToToday: function(event) { console.log(event); },
-
-            setTitle: function(event) {
-                this.title = event.detail.view.title;
-            },
-
-            aquirePCA: function(pca) {
-                this.pca = pca.detail.response;
-            },
-
-            aquireHours: function(hours) {
-                this.hours = hours.detail.response;
             },
 
             addTime: function(event) {
@@ -266,6 +277,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             submitTime: function(event) {
+                // populate newTime
                 this.newTime.title       = this.$.pca.value;
                 this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value);
                 this.newTime.end         = moment(this.newTime.date).hour(this.$.endTime.value);
