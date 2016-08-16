@@ -10,7 +10,8 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/image-icons.html">
 
 <dom-module id="time-travel">
     <template>
@@ -30,6 +31,10 @@
                 --paper-icon-button-ink-color: white;
             }
 
+            app-toolbar span {
+                font-weight: 100;
+            }
+
             .drawer-list {
                 margin: 0;
             }
@@ -47,11 +52,11 @@
                 font-weight: bold;
             }
 
-            paper-icon-button {
+            /*paper-icon-button {
                 background-color: rgba(255, 255, 255, 0.25);
                 border-radius: 50%;
                 margin-right: 1.1vw;
-            }
+            }*/
         </style>
 
         <app-location route="{{route}}"></app-location>
@@ -67,11 +72,11 @@
             <app-header-layout has-scrolling-region>
                 <app-header condenses reveals effects="waterfall">
                     <app-toolbar>
-                        <paper-icon-button icon="blur"></paper-icon-button>
+                        <paper-icon-button icon="image:blur-on" on-tap=""></paper-icon-button>
 
-                        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list flex" role="navigation">
                             <a name="coastal-travel" href="/time-travel-calendar">
-                                Time Travel
+                                Time <span>Travel</span>
                             </a>
                         </iron-selector>
 

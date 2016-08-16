@@ -58,11 +58,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 text-align: center;
             }
 
-            h1.title {
+            h1.title,
+            #dialog h1 {
                 font-size: 22px;
                 font-weight: 100;
                 margin: 0 0 16px 0;
                 color: #212121;
+            }
+
+            #dialog {
+                min-width: 70vw;
+            }
+
+            #dialog h1 {
+                text-align: center;
+                margin: 20px 0;
             }
 
             paper-icon-button,
@@ -96,52 +106,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    url="pca.json"
                    method="GET"
                    handle-as="json"
-                   on-response="aquirePCA"></iron-ajax>
+                   on-response="_aquirePCA"></iron-ajax>
 
         <iron-ajax auto
                    url="hours.json"
                    method="GET"
                    handle-as="json"
-                   on-response="aquireHours"></iron-ajax>
+                   on-response="_aquireHours"></iron-ajax>
 
         <div class="actions layout horizontal">
             <h1 class="title flex">
-                <paper-icon-button id="previous" icon="chevron-left" on-transitionend="previous"></paper-icon-button>
+                <paper-icon-button id="previous" icon="chevron-left" on-transitionend="_previous"></paper-icon-button>
 
                 [[ title ]]
 
-                <paper-icon-button id="next" icon="chevron-right" on-transitionend="next"></paper-icon-button>
+                <paper-icon-button id="next" icon="chevron-right" on-transitionend="_next"></paper-icon-button>
             </h1>
 
-            <paper-icon-button icon="search"></paper-icon-button>
+            <paper-icon-button icon="search" on-tap="_openSearch"></paper-icon-button>
 
             <paper-menu-button>
                 <paper-icon-button icon="{{ selectedViewIcon }}" class="dropdown-trigger"></paper-icon-button>
 
                 <paper-menu class="dropdown-content" selected="0">
-                    <paper-item view="month" icon="view-module" on-tap="changeView">
+                    <paper-item view="month" icon="view-module" on-tap="_changeView">
                         <iron-icon icon="view-module" view="month"></iron-icon> Month
                     </paper-item>
 
-                    <paper-item view="agendaWeek" icon="view-week" on-tap="changeView">
+                    <paper-item view="agendaWeek" icon="view-week" on-tap="_changeView">
                         <iron-icon icon="view-week" view="agendaWeek"></iron-icon> Week
                     </paper-item>
 
-                    <paper-item view="agendaDay" icon="view-day" on-tap="changeView">
+                    <paper-item view="agendaDay" icon="view-day" on-tap="_changeView">
                         <iron-icon icon="view-day" view="agendaDay"></iron-icon> Day
                     </paper-item>
                 </paper-menu>
             </paper-menu-button>
 
-            <paper-icon-button icon="today" on-tap="gotoToday"></paper-icon-button>
+            <paper-icon-button icon="today" on-tap="_gotoToday"></paper-icon-button>
         </div> <!-- end .actions -->
 
         <div id="calendar" class="card">
             <fullcalendar-calendar options="{{ options }}"
                                    view="{{ view }}"
-                                   on-view-render="setTitle"
-                                   on-day-click="addTime"
-                                   on-event-click="editTime">
+                                   on-view-render="_setTitle"
+                                   on-day-click="_addTime"
+                                   on-event-click="_editTime">
             </fullcalendar-calendar>
         </div> <!-- end #calendar -->
 
@@ -171,7 +181,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-dropdown-menu label="Start Time" id="startTime" class="flex">
                         <paper-listbox class="dropdown-content">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <paper-item>{{ index }}</paper-item>
+                                <!-- <paper-item>{{ index }}</paper-item> -->
+                                <paper-item>{{ item.hour }}</paper-item>
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -181,7 +192,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-dropdown-menu label="End Time" id="endTime" class="flex">
                         <paper-listbox class="dropdown-content">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <paper-item>{{ index }}</paper-item>
+                                <!-- <paper-item>{{ index }}</paper-item> -->
+                                <paper-item>{{ item.hour }}</paper-item>
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -191,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 <div class="buttons">
                     <paper-button dialog-dismiss>Cancel</paper-button>
-                    <paper-button dialog-confirm on-click="submitTime">Save</paper-button>
+                    <paper-button dialog-confirm on-click="_submitTime">Save</paper-button>
                 </div>
             </form>
         </paper-dialog>
@@ -239,21 +251,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             },
 
-            previous: function() { this.calendar.previous(); },
+            _previous: function() { this.calendar.previous(); },
 
-            next: function() { this.calendar.next(); },
+            _next: function() { this.calendar.next(); },
 
-            setTitle: function(event) { this.title = event.detail.view.title; },
+            _setTitle: function(event) { this.title = event.detail.view.title; },
 
-            aquirePCA: function(pca) { this.pca = pca.detail.response; },
+            _aquirePCA: function(pca) { this.pca = pca.detail.response; },
 
-            aquireHours: function(hours) { this.hours = hours.detail.response; },
+            _aquireHours: function(hours) { this.hours = hours.detail.response; },
 
-            gotoToday: function(event) { this.calendar.today(); },
+            _gotoToday: function(event) { this.calendar.today(); },
 
-            gotoDate: function(date) { this.calendar.gotoDate(date); },
+            _gotoDate: function(date) { this.calendar.gotoDate(date); },
 
-            changeView: function(event) {
+            _changeView: function(event) {
                 var selectedView     = event.target.attributes.getNamedItem('view').value,
                     selectedViewIcon = event.target.attributes.getNamedItem('icon').value;
 
@@ -261,7 +273,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.selectedViewIcon = selectedViewIcon;
             },
 
-            addTime: function(event) {
+            _openSearch: function(event) {
+                console.log('open search');
+            },
+
+            _addTime: function(event) {
                 var date = moment(event.detail.date).format('MMM DD, YYYY');
 
                 Polymer.dom(this.root).querySelector('#dialog').open();
@@ -269,14 +285,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.newTime.date = event.detail.date;
             },
 
-            editTime: function(event) {
+            _editTime: function(event) {
                 var date = moment(event.detail.date).format('MMM DD, YYYY');
 
                 Polymer.dom(this.root).querySelector('#dialog').open();
                 this.dialogTitle = 'Edit ' + event.detail.event.title + ' Time on ' + date;
             },
 
-            submitTime: function(event) {
+            _submitTime: function(event) {
                 // populate newTime
                 this.newTime.title       = this.$.pca.value;
                 this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value);
