@@ -1,10 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
 
 <dom-module id="time-travel-login">
     <template>
@@ -17,31 +19,35 @@
             .card {
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
                 padding: 16px;
-                margin: 0 24px 24px 24px;
                 border-radius: 5px;
                 background-color: #fff;
                 color: #757575;
+                max-width: 70vw;
+                margin: auto;
             }
         </style>
 
-        <form is="iron-form"
-              id="loginForm"
-              class="card"
-              method="POST"
-              action="">
-              
-            <div class="layout horizontal">
-                <paper-input id="email"></paper-input>
-            </div> <!-- end layout -->
+        <div id="" class="card layout center flex">
+            <form is="iron-form"
+                  id="timeForm"
+                  method="POST"
+                  action="">
 
-            <div class="layout horizontal">
-                <paper-input id="password"></paper-input>
-            </div> <!-- end layout -->
+                <div class="layout horizontal">
+                    <paper-input label="Email" id="email" class="flex"></paper-input>
+                </div> <!-- end layout -->
 
-            <div class="layout horizontal">
-                <paper-button id="submit">Login</paper-button>
-            </div> <!-- end layout -->
-        </form>
+                <div class="layout horizontal">
+                    <paper-input label="Password" id="password" class="flex"></paper-input>
+                </div> <!-- end layout -->
+
+                <div class="buttons">
+                    <a href="/time-travel-calendar">
+                        <paper-button on-tap="_login" >Login</paper-button>
+                    </a>
+                </div>
+            </form>
+        </div> <!-- end .card -->
     </template>
 
     <script>
@@ -60,9 +66,8 @@
             },
 
             _login: function() {
-                this.email;
-                this.password;
+                console.log("login")
             }
-        })
+        });
     </script>
 </dom-module>
