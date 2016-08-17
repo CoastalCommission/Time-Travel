@@ -2,7 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/time-travel.html",
   "fragments": [
-    "src/coastal-time.html",
-    "src/coastal-travel.html"
+    "src/time-travel-calendar.html",
+    "src/lime-travel-login.html"
   ]
 }
