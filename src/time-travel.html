@@ -59,12 +59,12 @@
             }*/
         </style>
 
-        <app-location route="{{route}}"></app-location>
+        <app-location route="{{ route }}"></app-location>
 
-        <app-route route="{{route}}"
+        <app-route route="{{ route }}"
                    pattern="/:page"
-                   data="{{routeData}}"
-                   tail="{{subroute}}">
+                   data="{{ routeData }}"
+                   tail="{{ subroute }}">
         </app-route>
 
         <app-drawer-layout fullbleed>
@@ -74,7 +74,7 @@
                     <app-toolbar>
                         <paper-icon-button icon="image:blur-on" on-tap=""></paper-icon-button>
 
-                        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list flex" role="navigation">
+                        <iron-selector selected="[[ page ]]" attr-for-selected="name" class="drawer-list flex" role="navigation">
                             <a name="coastal-travel" href="/time-travel-calendar">
                                 Time <span>Travel</span>
                             </a>
@@ -83,7 +83,7 @@
                     </app-toolbar>
                 </app-header>
 
-                <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+                <iron-pages role="main" selected="[[ page ]]" attr-for-selected="name">
                     <time-travel-calendar name="time-travel-calendar"></time-travel-calendar>
                     <time-travel-login name="time-travel-login"></time-travel-login>
                 </iron-pages>
@@ -108,7 +108,13 @@
             ],
 
             _routePageChanged: function(page) {
-                this.page = page || 'time-travel-calendar';
+                if(page) {
+                    this.page = page
+                } else {
+                    this.page = 'time-travel-calendar'
+                }
+
+                console.log(this.page);
             },
 
             _pageChanged: function(page) {
