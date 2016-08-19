@@ -102,6 +102,12 @@
                    handle-as="json"
                    on-response="_aquireHours"></iron-ajax>
 
+        <iron-ajax auto
+                   url="events.json"
+                   method="GET"
+                   handle-as="json"
+                   on-response="_aquireEvents"></iron-ajax>
+
         <div class="actions layout horizontal">
             <h1 class="title flex">
                 <paper-icon-button id="previous" icon="chevron-left" on-transitionend="_previous"></paper-icon-button>
@@ -216,9 +222,7 @@
                     type: Object,
                     value: {
                         header: false,
-                        events: [
-                            { title: 'General Administration', start: moment() }
-                        ]
+                        events: []
                     }
                 },
                 selectedViewIcon: {
@@ -248,6 +252,8 @@
             _aquirePCA: function(pca) { this.pca = pca.detail.response; },
 
             _aquireHours: function(hours) { this.hours = hours.detail.response; },
+
+            _aquireEvents: function(events) { this.options.events = events.detail.response; },
 
             _gotoToday: function(event) { this.calendar.today(); },
 
