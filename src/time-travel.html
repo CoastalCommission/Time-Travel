@@ -75,7 +75,7 @@
                         <paper-icon-button icon="image:blur-on" on-tap=""></paper-icon-button>
 
                         <iron-selector selected="[[ page ]]" attr-for-selected="name" class="drawer-list flex" role="navigation">
-                            <a name="coastal-travel" href="/time-travel-calendar">
+                            <a name="calendar" href="/calendar">
                                 Time <span>Travel</span>
                             </a>
                         </iron-selector>
@@ -84,8 +84,8 @@
                 </app-header>
 
                 <iron-pages role="main" selected="[[ page ]]" attr-for-selected="name">
-                    <time-travel-calendar name="time-travel-calendar"></time-travel-calendar>
-                    <time-travel-login name="time-travel-login"></time-travel-login>
+                    <time-travel-calendar name="calendar"></time-travel-calendar>
+                    <time-travel-login name="login"></time-travel-login>
                 </iron-pages>
             </app-header-layout>
         </app-drawer-layout>
@@ -111,7 +111,7 @@
                 if(page) {
                     this.page = page
                 } else {
-                    this.page = 'time-travel-calendar'
+                    this.page = 'calendar'
                 }
 
                 console.log(this.page);
@@ -119,7 +119,7 @@
 
             _pageChanged: function(page) {
                 // load page import on demand.
-                this.importHref(this.resolveUrl(page + '.html'), null, null, true);
+                this.importHref(this.resolveUrl('time-travel-' + page + '.html'), null, null, true);
             }
         });
     </script>

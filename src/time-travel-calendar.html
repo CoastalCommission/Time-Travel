@@ -141,7 +141,7 @@
         </div> <!-- end .actions -->
 
         <div id="calendar" class="card">
-            <fullcalendar-calendar options="{{ options }}"
+            <fullcalendar-calendar options="[[ options ]]"
                                    view="{{ view }}"
                                    on-view-render="_setTitle"
                                    on-day-click="_addTime"
@@ -175,8 +175,8 @@
                     <paper-dropdown-menu label="Start Time" id="startTime" class="flex">
                         <paper-listbox class="dropdown-content">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <!-- <paper-item>{{ index }}</paper-item> -->
-                                <paper-item>{{ item.hour }}</paper-item>
+                                <paper-item>{{ index }}</paper-item>
+                                <!-- <paper-item>{{ item.hour }}</paper-item> -->
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -186,8 +186,8 @@
                     <paper-dropdown-menu label="End Time" id="endTime" class="flex">
                         <paper-listbox class="dropdown-content">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <!-- <paper-item>{{ index }}</paper-item> -->
-                                <paper-item>{{ item.hour }}</paper-item>
+                                <paper-item>{{ index }}</paper-item>
+                                <!-- <paper-item>{{ item.hour }}</paper-item> -->
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -197,7 +197,7 @@
 
                 <div class="buttons">
                     <paper-button dialog-dismiss>Cancel</paper-button>
-                    <paper-button dialog-confirm on-click="_submitTime">Save</paper-button>
+                    <paper-button dialog-confirm on-click="_saveTime">Save</paper-button>
                 </div>
             </form>
         </paper-dialog>
@@ -253,7 +253,9 @@
 
             _aquireHours: function(hours) { this.hours = hours.detail.response; },
 
-            _aquireEvents: function(events) { this.options.events = events.detail.response; },
+            _aquireEvents: function(events) {
+                this.calendar.addEventSource(events.detail.response);
+            },
 
             _gotoToday: function(event) { this.calendar.today(); },
 
@@ -286,7 +288,7 @@
                 this.dialogTitle = 'Edit ' + event.detail.event.title + ' Time on ' + date;
             },
 
-            _submitTime: function(event) {
+            _saveTime: function(event) {
                 // populate newTime
                 this.newTime.title       = this.$.pca.value;
                 this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value);
@@ -294,7 +296,7 @@
                 this.newTime.description = this.$.description.value;
 
                 this.options.events.push(this.newTime);
-                console.log(this.options.events);
+                this.calendar.refetchEvents();
 
                 // Polymer.dom(event).localTarget.parentElement.submit();
             }

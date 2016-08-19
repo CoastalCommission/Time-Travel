@@ -15,7 +15,7 @@
       win.loadURL(`file://${__dirname}/index.html`)
 
       // Open the DevTools.
-    //   win.webContents.openDevTools({mode: 'undocked'})
+      win.webContents.openDevTools({mode: 'undocked'})
 
       // Emitted when the window is closed.
       win.on('closed', () => {
