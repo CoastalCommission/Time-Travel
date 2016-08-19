@@ -5,14 +5,24 @@ Record & Report All Time & Travel
 
 ### Setup
 
+These commands install all dependencies
 
-### Start the development server
+    git clone git@github.com:CoastalCommission/Time-Travel.git && cd Time-Travel
+    npm install -g electron polymer-cli
+    npm install && bower install
+
+### Launch in Browser
 
 This command serves the app at `http://localhost:8080` and provides basic URL
 routing for the app:
 
-    polymer serve
+    polymer serve --open
 
+### Launch in Electron
+
+This command opens the app within Electron
+
+    electron .
 
 ### Build
 
