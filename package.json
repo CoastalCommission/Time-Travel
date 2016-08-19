@@ -1,0 +1,28 @@
+{
+  "name": "time-travel",
+  "version": "1.0.0",
+  "description": "Record & Report All Time & Travel",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "electron": "^1.3.3"
+  },
+  "devDependencies": {
+    "electron": "^1.3.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoastalCommission/Time-Travel.git"
+  },
+  "author": "California Coastal Commission - Zachariah Moreno",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/CoastalCommission/Time-Travel/issues"
+  },
+  "homepage": "https://github.com/CoastalCommission/Time-Travel#readme"
+}
