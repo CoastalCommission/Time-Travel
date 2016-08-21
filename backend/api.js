@@ -97,10 +97,10 @@
                                               "start," +
                                               "end," +
                                               "description) " +
-                      "VALUES('" + title + "', '" +
-                                 + start + "', '" +
-                                 + end + "', '" +
-                                   description + "')");
+                      "VALUES('" + title + "', '"
+                                 + start + "', '"
+                                 + end + "', '"
+                                 + description + "')");
 
             trans.commit(function(err) {
                 if(err) {

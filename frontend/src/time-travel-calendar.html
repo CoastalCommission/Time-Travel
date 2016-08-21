@@ -103,10 +103,16 @@
                    on-response="_aquireHours"></iron-ajax>
 
         <iron-ajax auto
-                   url="events.json"
+                   url="http://localhost:3040/time"
                    method="GET"
                    handle-as="json"
                    on-response="_aquireEvents"></iron-ajax>
+
+        <iron-ajax id="postTime"
+                   url="http://localhost:3040/time"
+                   method="POST"
+                   handle-as="json"
+                   content-type="application/json"></iron-ajax>
 
         <div class="actions layout horizontal">
             <h1 class="title flex">
@@ -255,6 +261,7 @@
 
             _aquireEvents: function(events) {
                 this.calendar.addEventSource(events.detail.response);
+                console.log(events.detail.response);
             },
 
             _gotoToday: function(event) { this.calendar.today(); },
@@ -291,16 +298,13 @@
             _saveTime: function(event) {
                 // populate newTime
                 this.newTime.title       = this.$.pca.value;
-                this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value);
-                this.newTime.end         = moment(this.newTime.date).hour(this.$.endTime.value);
+                this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value)._d.toString();
+                this.newTime.end         = moment(this.newTime.date).hour(this.$.endTime.value)._d.toString();
                 this.newTime.description = this.$.description.value;
 
-                this.options.events.push(this.newTime);
-
-                json.update('events.json', this.options.events)
-                .then(function(promisedJSON) {
-                    console.log(promisedJSON);
-                });
+                this.$.postTime.body = JSON.stringify(this.newTime);
+                console.log(this.$.postTime.body);
+                this.$.postTime.generateRequest();
 
                 this.calendar.refetchEvents();
 
