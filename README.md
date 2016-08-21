@@ -1,7 +1,7 @@
 # Time-Travel
 Record & Report All Time & Travel
 
-![Time-Travel](https://github.com/CoastalCommission/Time-Travel/blob/master/images/screenshot.png?raw=true)
+![Time-Travel](https://github.com/CoastalCommission/Time-Travel/blob/master/frontend/images/screenshot.png?raw=true)
 
 ### Setup
 
