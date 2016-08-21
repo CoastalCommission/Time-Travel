@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -112,7 +113,10 @@
                    url="http://localhost:3040/time"
                    method="POST"
                    handle-as="json"
-                   content-type="application/json"></iron-ajax>
+                   content-type="application/json"
+                   on-response="_aquireTimePostResponse"></iron-ajax>
+
+        <paper-toast id="toast"></paper-toast>
 
         <div class="actions layout horizontal">
             <h1 class="title flex">
@@ -267,6 +271,10 @@
 
             _aquireEvents: function(events) { this.calendar.addEventSource(events.detail.response) },
 
+            _aquireTimePostResponse: function(events) {
+                this.$.toast.show({ text: events.detail.response.feedback });
+            },
+
             _gotoToday: function(event) { this.calendar.today() },
 
             _gotoDate: function(date) { this.calendar.gotoDate(date) },
@@ -307,6 +315,8 @@
 
                 this.$.postTime.body = JSON.stringify(this.newTime);
                 this.$.postTime.generateRequest();
+
+                console.log(this.$.postTime.response);
             }
         });
     </script>
