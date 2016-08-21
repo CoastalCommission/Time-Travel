@@ -14,7 +14,7 @@ These commands install all dependencies
 
 ### Launch Backend
 
-This command initializes a new time-travel SQLite DB and or launches the API at localhost:3040
+This command initializes a new time-travel SQLite DB and or launches the API at `localhost:3040/time`
 
     cd backend && node api.js
 
