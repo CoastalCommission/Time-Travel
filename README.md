@@ -23,12 +23,14 @@ This command initializes a new time-travel SQLite DB and or launches the API at 
 This command serves the app at `http://localhost:8080` and provides basic URL
 routing for the app:
 
+    cd frontend
     polymer serve --open
 
 ### Launch Frontend in Electron
 
 This command opens the app within Electron
 
+    cd frontend
     electron .
 
 ### Build
