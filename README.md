@@ -12,7 +12,7 @@ These commands install all dependencies
     cd backend && npm install
     cd ../frontend && npm install && bower install
 
-### Launch backend
+### Launch Backend
 
 This command initializes a new time-travel SQLite DB and or launches the API at localhost:3040
 
