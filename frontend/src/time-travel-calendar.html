@@ -170,7 +170,7 @@
                         <paper-listbox class="dropdown-content">
                             <template is="dom-repeat" items="{{ pca }}">
                                 <paper-item>
-                                    {{ item.title }} ({{ item.pca }})
+                                    {{ item.title }}
                                 </paper-item>
                             </template>
                         </paper-listbox>
@@ -179,10 +179,9 @@
 
                 <div class="layout horizontal">
                     <paper-dropdown-menu label="Start Time" id="startTime" class="flex">
-                        <paper-listbox class="dropdown-content">
+                        <paper-listbox class="dropdown-content" selected="{{ selectedStartTime }}" attr-for-selected="{{ value }}">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <paper-item>{{ index }}</paper-item>
-                                <!-- <paper-item>{{ item.hour }}</paper-item> -->
+                                <paper-item value="{{ index }}">{{ item.hour }}</paper-item>
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -190,10 +189,9 @@
                     <iron-icon icon="arrow-forward" id="arrow"></iron-icon>
 
                     <paper-dropdown-menu label="End Time" id="endTime" class="flex">
-                        <paper-listbox class="dropdown-content">
+                        <paper-listbox class="dropdown-content" selected="{{ selectedEndTime }}" attr-for-selected="{{ value }}">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <paper-item>{{ index }}</paper-item>
-                                <!-- <paper-item>{{ item.hour }}</paper-item> -->
+                                <paper-item value="{{ index }}">{{ item.hour }}</paper-item>
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -235,6 +233,14 @@
                     type: String,
                     value: 'view-module'
                 },
+                selectedStartTime: {
+                    type: String,
+                    value: null
+                },
+                selectedEndTime: {
+                    type: String,
+                    value: null
+                },
                 newTime: {
                     type: Object,
                     value: {}
@@ -249,24 +255,21 @@
                 }
             },
 
-            _previous: function() { this.calendar.previous(); },
+            _previous: function() { this.calendar.previous() },
 
-            _next: function() { this.calendar.next(); },
+            _next: function() { this.calendar.next() },
 
-            _setTitle: function(event) { this.title = event.detail.view.title; },
+            _setTitle: function(event) { this.title = event.detail.view.title },
 
-            _aquirePCA: function(pca) { this.pca = pca.detail.response; },
+            _aquirePCA: function(pca) { this.pca = pca.detail.response },
 
-            _aquireHours: function(hours) { this.hours = hours.detail.response; },
+            _aquireHours: function(hours) { this.hours = hours.detail.response },
 
-            _aquireEvents: function(events) {
-                this.calendar.addEventSource(events.detail.response);
-                console.log(events.detail.response);
-            },
+            _aquireEvents: function(events) { this.calendar.addEventSource(events.detail.response) },
 
-            _gotoToday: function(event) { this.calendar.today(); },
+            _gotoToday: function(event) { this.calendar.today() },
 
-            _gotoDate: function(date) { this.calendar.gotoDate(date); },
+            _gotoDate: function(date) { this.calendar.gotoDate(date) },
 
             _changeView: function(event) {
                 var selectedView     = event.target.attributes.getNamedItem('view').value,
@@ -297,18 +300,13 @@
 
             _saveTime: function(event) {
                 // populate newTime
-                this.newTime.title       = this.$.pca.value;
-                this.newTime.start       = moment(this.newTime.date).hour(this.$.startTime.value)._d.toString();
-                this.newTime.end         = moment(this.newTime.date).hour(this.$.endTime.value)._d.toString();
+                this.newTime.title = this.$.pca.value;
+                this.newTime.start = moment(this.newTime.date).hour(this.selectedStartTime)._d.toString();
+                this.newTime.end = moment(this.newTime.date).hour(this.selectedEndTime)._d.toString();
                 this.newTime.description = this.$.description.value;
 
                 this.$.postTime.body = JSON.stringify(this.newTime);
-                console.log(this.$.postTime.body);
                 this.$.postTime.generateRequest();
-
-                this.calendar.refetchEvents();
-
-                // Polymer.dom(event).localTarget.parentElement.submit();
             }
         });
     </script>
