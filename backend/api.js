@@ -117,14 +117,33 @@
     })
 
     .delete('/time/:id', function(req, res, next) {
-        trans.run('DELETE FROM time_tbl ' +
-                  'WHERE time_tbl.id = ' + req.params.id);
+        db.beginTransaction(function(err, trans) {
+            trans.run('DELETE FROM time_tbl ' +
+                      'WHERE time_tbl.id = ' + req.params.id);
 
-        trans.commit(function(err) {
-            if(err) {
-                logger.error('DELETE /time/' + req.params.id, err);
+            trans.commit(function(err) {
+                if(err) {
+                    logger.error('DELETE /time/' + req.params.id, err);
+                } else {
+                    logger.info('DELETE /time/' + req.params.id);
+                    res.send({
+                        'deleted': true,
+                        'feedback': 'Time Deleted id:' + req.params.id
+                    });
+                }
+            });
+        });
+    })
+
+    .get('/time/:id', function(req, res, next) {
+        var sql = "SELECT * FROM time_tbl WHERE id = " + req.params.id;
+
+        db.all(sql, function(err, resultSet) {
+            if(err !== null) {
+                logger.error('GET /time/' + req.params.id, err);
             } else {
-                logger.info('DELETE /time/' + req.params.id);
+                logger.info('GET /time/' + req.params.id);
+                res.send(resultSet);
             }
         });
     });
