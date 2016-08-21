@@ -116,6 +116,19 @@
         });
     })
 
+    .delete('/time/:id', function(req, res, next) {
+        trans.run('DELETE FROM time_tbl ' +
+                  'WHERE time_tbl.id = ' + req.params.id);
+
+        trans.commit(function(err) {
+            if(err) {
+                logger.error('DELETE /time/' + req.params.id, err);
+            } else {
+                logger.info('DELETE /time/' + req.params.id);
+            }
+        });
+    });
+
     api.use(router);
     api.listen(port, hostIP, function() {
         logger.info('Time-Travel API is awake @ http://' + hostIP + ':' + port);
