@@ -103,7 +103,7 @@
                    on-response="_aquireHours"></iron-ajax>
 
         <iron-ajax auto
-                   url="http://localhost:3040/time"
+                   url="events.json"
                    method="GET"
                    handle-as="json"
                    on-response="_aquireEvents"></iron-ajax>
@@ -254,9 +254,6 @@
             _aquireHours: function(hours) { this.hours = hours.detail.response; },
 
             _aquireEvents: function(events) {
-                // events.detail.response.start = moment(events.detail.response.start);
-                // events.detail.response.end = moment(events.detail.response.end);
-                console.log(events.detail.response);
                 this.calendar.addEventSource(events.detail.response);
             },
 

@@ -38,6 +38,9 @@
 
             if ('require' in window) {
                 window.$ = window.jQuery = require('./bower_components/jquery/dist/jquery.min.js');
+                window.json = require('json-update');
+            } else {
+                console.log('no require in window');
             }
         </script>
 
