@@ -9,16 +9,23 @@ These commands install all dependencies
 
     git clone git@github.com:CoastalCommission/Time-Travel.git && cd Time-Travel
     npm install -g electron polymer-cli
-    npm install && bower install
+    cd backend && npm install
+    cd ../frontend && npm install && bower install
 
-### Launch in Browser
+### Launch backend
+
+This command initializes a new time-travel SQLite DB and or launches the API at localhost:3040
+
+    cd backend && node api.js
+
+### Launch Frontend in Browser
 
 This command serves the app at `http://localhost:8080` and provides basic URL
 routing for the app:
 
     polymer serve --open
 
-### Launch in Electron
+### Launch Frontend in Electron
 
 This command opens the app within Electron
 
