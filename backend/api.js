@@ -107,9 +107,22 @@
                     logger.error('POST /time', err);
                 } else {
                     logger.info('POST /time');
-                    res.send({
-                        'added': true,
-                        'feedback': 'New Time Created'
+
+                    var sql = "SELECT * FROM time_tbl";
+
+                    db.all(sql, function(err, resultSet) {
+                        if(err !== null) {
+                            logger.error('GET /time', err);
+                        } else {
+                            logger.info('GET /time');
+                            res.send({
+                                'status': {
+                                    'added': true,
+                                    'feedback': 'New Time Created'
+                                },
+                                'data': resultSet
+                            });
+                        }
                     });
                 }
             });

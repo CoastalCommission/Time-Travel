@@ -114,7 +114,7 @@
                    method="POST"
                    handle-as="json"
                    content-type="application/json"
-                   on-response="_aquireTimePostResponse"></iron-ajax>
+                   on-response="_aquireEvents"></iron-ajax>
 
         <paper-toast id="toast"></paper-toast>
 
@@ -269,10 +269,19 @@
 
             _aquireHours: function(hours) { this.hours = hours.detail.response },
 
-            _aquireEvents: function(events) { this.calendar.addEventSource(events.detail.response) },
+            _aquireEvents: function(events) {
+                if(!events.detail.response.data) {
+                    this.calendar.addEventSource(events.detail.response);
+                } else {
+                    this.calendar.removeEventSources();
+                    this.calendar.addEventSource(events.detail.response.data);
+                }
+
+                this.$.toast.show('Fetched all time');
+            },
 
             _aquireTimePostResponse: function(events) {
-                this.$.toast.show({ text: events.detail.response.feedback });
+                this.$.toast.show(events.detail.response.status.feedback);
             },
 
             _gotoToday: function(event) { this.calendar.today() },
@@ -315,8 +324,6 @@
 
                 this.$.postTime.body = JSON.stringify(this.newTime);
                 this.$.postTime.generateRequest();
-
-                console.log(this.$.postTime.response);
             }
         });
     </script>
