@@ -35,7 +35,8 @@
     "iron-collapse": "^1.2.0",
     "paper-listbox": "^1.1.2",
     "iron-autogrow-textarea": "^1.0.13",
-    "paper-header-panel": "^1.1.6"
+    "paper-header-panel": "^1.1.6",
+    "paper-toolbar": "^1.1.6"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

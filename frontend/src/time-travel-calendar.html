@@ -86,6 +86,10 @@
                 margin: 5%;
             }
 
+            #pca {
+                margin: 0 5%;
+            }
+
             --fullcalendar {
 
             }
@@ -170,11 +174,31 @@
                   action="">
 
                 <div class="layout horizontal">
-                    <paper-dropdown-menu label="Project Code (PCA)" id="pca" class="flex">
+                    <paper-dropdown-menu label="Project" id="project" class="flex">
                         <paper-listbox class="dropdown-content">
                             <template is="dom-repeat" items="{{ pca }}">
                                 <paper-item>
-                                    {{ item.title }}
+                                    {{ item.project }}
+                                </paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+
+                    <paper-dropdown-menu label="PCA" id="pca" class="flex">
+                        <paper-listbox class="dropdown-content">
+                            <template is="dom-repeat" items="{{ pca }}">
+                                <paper-item>
+                                    {{ item.pca }}
+                                </paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+
+                    <paper-dropdown-menu label="Fi$cal" id="fiscal" class="flex">
+                        <paper-listbox class="dropdown-content">
+                            <template is="dom-repeat" items="{{ pca }}">
+                                <paper-item>
+                                    {{ item.fiscal }}
                                 </paper-item>
                             </template>
                         </paper-listbox>
