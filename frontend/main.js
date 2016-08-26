@@ -1,7 +1,61 @@
 (function() {
     'use strict';
 
-    const {app, BrowserWindow} = require('electron')
+    const {
+        app,
+        BrowserWindow
+    } = require('electron');
+
+    var express  = require('express'),
+        passport = require('passport'),
+        parser   = require('body-parser'),
+        fs       = require('fs'),
+        ip       = 'localhost',
+        port     = '3000',
+        api      = express(),
+        router   = express.Router(),
+        ldap     = require('passport-ldapauth'),
+        config   = {
+            server: {
+                url: 'ldap://111.111.111:389',
+                bindDn: 'cn=root',
+                bindCredentials: 'secret',
+                searchBase: 'ou=passport-ldapauth',
+                searchFilter: '(uid={{username}})'
+            }
+        };
+
+    // http://enable-cors.org/server_expressjs.html
+    api.all('*', function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', '*');
+        res.header('Access-Control-Allow-Headers', 'content-Type,X-Requested-With');
+        next();
+    });
+
+    // configure passport
+    passport.use(new ldap(config));
+
+    // middleware
+    api.use(parser.json());
+    api.use(parser.urlencoded({ extended: false }));
+    api.use(passport.initialize());
+    api.use(router);
+
+    // routes
+    router.post('/login',
+                passport.authenticate('ldap', { session:false }),
+                function(req, user, res) {
+        res.send({
+            status: 'authenticated',
+            user: user
+        });
+    });
+
+    // run app
+    api.listen(port, ip, function() {
+        console.log('Auth API is awake @ http://' + ip + ':' + port);
+    });
 
     // Keep a global reference of the window object, if you don't, the window will
     // be closed automatically when the JavaScript object is garbage collected.
