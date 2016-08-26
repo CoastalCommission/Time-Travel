@@ -209,7 +209,7 @@
                     <paper-dropdown-menu label="Start Time" id="startTime" class="flex">
                         <paper-listbox class="dropdown-content" selected="{{ selectedStartTime }}" attr-for-selected="{{ value }}">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <paper-item value="{{ index }}">{{ item.hour }}</paper-item>
+                                <paper-item value="{{ item.id }}">{{ item.hour }}</paper-item>
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -219,7 +219,7 @@
                     <paper-dropdown-menu label="End Time" id="endTime" class="flex">
                         <paper-listbox class="dropdown-content" selected="{{ selectedEndTime }}" attr-for-selected="{{ value }}">
                             <template is="dom-repeat" items="{{ hours }}">
-                                <paper-item value="{{ index }}">{{ item.hour }}</paper-item>
+                                <paper-item value="{{ item.id }}">{{ item.hour }}</paper-item>
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
@@ -341,7 +341,7 @@
 
             _saveTime: function(event) {
                 // populate newTime
-                this.newTime.title = this.$.pca.value;
+                this.newTime.title = this.$.project.value;
                 this.newTime.start = moment(this.newTime.date).hour(this.selectedStartTime)._d.toString();
                 this.newTime.end = moment(this.newTime.date).hour(this.selectedEndTime)._d.toString();
                 this.newTime.description = this.$.description.value;
