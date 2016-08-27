@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
@@ -27,14 +29,23 @@
             }
         </style>
 
+        <iron-ajax id="login"
+                   url="http://localhost:3000/login"
+                   method="POST"
+                   handle-as="json"
+                   content-type="application/json"
+                   on-response="_aquireUser"></iron-ajax>
+
+        <paper-toast id="toast"></paper-toast>
+
         <div id="" class="card layout center flex">
             <form is="iron-form"
-                  id="timeForm"
+                  id="loginForm"
                   method="POST"
                   action="">
 
                 <div class="layout horizontal">
-                    <paper-input label="Email" id="email" class="flex"></paper-input>
+                    <paper-input label="Username" id="username" class="flex"></paper-input>
                 </div> <!-- end layout -->
 
                 <div class="layout horizontal">
@@ -42,9 +53,7 @@
                 </div> <!-- end layout -->
 
                 <div class="buttons">
-                    <a href="/time-travel-calendar">
-                        <paper-button on-tap="_login" >Login</paper-button>
-                    </a>
+                    <paper-button on-tap="_login">Login</paper-button>
                 </div>
             </form>
         </div> <!-- end .card -->
@@ -55,7 +64,7 @@
             is: 'time-travel-login',
 
             properties: {
-                email: {
+                username: {
                     type: String,
                     value: null
                 },
@@ -66,7 +75,19 @@
             },
 
             _login: function() {
-                console.log("login")
+                this.username = this.$.username.value;
+                this.password = this.$.password.value;
+
+                this.$.login.body = {
+                    username: this.username,
+                    password: this.password
+                },
+                this.$.login.generateRequest();
+            },
+
+            _aquireUser: function(user) {
+                this.set('route.path', '/calendar');
+                this.$.toast.show('Thanks ' + user.detail.response.user);
             }
         });
     </script>

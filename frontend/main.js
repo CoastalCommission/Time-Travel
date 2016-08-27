@@ -6,16 +6,16 @@
         BrowserWindow
     } = require('electron');
 
-    var express  = require('express'),
-        passport = require('passport'),
-        parser   = require('body-parser'),
-        fs       = require('fs'),
-        ip       = 'localhost',
-        port     = '3000',
-        api      = express(),
-        router   = express.Router(),
-        ldap     = require('passport-ldapauth'),
-        config   = {
+    var express      = require('express'),
+        passport     = require('passport'),
+        parser       = require('body-parser'),
+        fs           = require('fs'),
+        ip           = 'localhost',
+        port         = '3000',
+        api          = express(),
+        router       = express.Router(),
+        LdapStrategy = require('passport-ldapauth'),
+        config       = {
             server: {
                 url: 'ldap://111.111.111:389',
                 bindDn: 'cn=root',
@@ -34,7 +34,7 @@
     });
 
     // configure passport
-    passport.use(new ldap(config));
+    passport.use(new LdapStrategy(config));
 
     // middleware
     api.use(parser.json());
@@ -44,11 +44,12 @@
 
     // routes
     router.post('/login',
-                passport.authenticate('ldap', { session:false }),
-                function(req, user, res) {
+                // passport.authenticate('ldapauth', { session: false }),
+                function(req, /* user, */ res) {
         res.send({
             status: 'authenticated',
-            user: user
+            user: req.body.username,
+            password: req.body.password
         });
     });
 
