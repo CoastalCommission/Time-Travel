@@ -48,6 +48,7 @@
                 function(req, /* user, */ res) {
         res.send({
             status: 'authenticated',
+            feedback: 'Thanks ' + req.body.username + '! You\'re In.',
             user: req.body.username,
             password: req.body.password
         });

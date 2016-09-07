@@ -87,7 +87,7 @@
 
             _aquireUser: function(user) {
                 this.set('route.path', '/calendar');
-                this.$.toast.show('Thanks ' + user.detail.response.user);
+                this.$.toast.show(user.detail.response.feedback);
             }
         });
     </script>
