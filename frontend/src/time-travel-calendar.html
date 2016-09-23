@@ -120,6 +120,12 @@
                    content-type="application/json"
                    on-response="_aquireEvents"></iron-ajax>
 
+        <iron-ajax id="deleteTime"
+                   url="http://localhost:3040/time"
+                   method="DELETE"
+                   handle-as="json"
+                   on-response="_aquireTimeDeleteResponse"></iron-ajax>
+
         <paper-toast id="toast"></paper-toast>
 
         <div class="actions layout horizontal">
@@ -229,6 +235,7 @@
 
                 <div class="buttons">
                     <paper-button dialog-dismiss>Cancel</paper-button>
+                    <paper-button dialog-dismiss on-click="_deleteTime">Delete</paper-button>
                     <paper-button dialog-confirm on-click="_saveTime">Save</paper-button>
                 </div>
             </form>
@@ -273,6 +280,10 @@
                     type: Object,
                     value: {}
                 },
+                editTime: {
+                    type: Object,
+                    value: {}
+                },
                 pca: {
                     type: Array,
                     value: null
@@ -301,11 +312,15 @@
                     this.calendar.addEventSource(events.detail.response.data);
                 }
 
-                this.$.toast.show('Fetched all time');
+                this.$.toast.show('Syncing Up');
             },
 
             _aquireTimePostResponse: function(events) {
                 this.$.toast.show(events.detail.response.status.feedback);
+            },
+
+            _aquireTimeDeleteResponse: function(events) {
+                this.$.toast.show(events.detail.response.feedback);
             },
 
             _gotoToday: function(event) { this.calendar.today() },
@@ -329,14 +344,35 @@
 
                 Polymer.dom(this.root).querySelector('#dialog').open();
                 this.dialogTitle = 'Add New Time on ' + date;
-                this.newTime.date = event.detail.date;
+
+                this.newTime = {
+                    date: date,
+                    title: null,
+                    start: null,
+                    end: null,
+                    description: null
+                };
             },
 
             _editTime: function(event) {
                 var date = moment(event.detail.date).format('MMM DD, YYYY');
 
+                editTime = {
+                    id: event.detail.event.id,
+                    title: event.detail.event.title,
+                    start: event.detail.event.start,
+                    end: event.detail.event.end,
+                    description: event.detail.event.description
+                };
+
                 Polymer.dom(this.root).querySelector('#dialog').open();
                 this.dialogTitle = 'Edit ' + event.detail.event.title + ' Time on ' + date;
+            },
+
+            _deleteTime: function(event) {
+                this.$.deleteTime.url = 'http://localhost:3040/time/' +  editTime.id;
+                this.$.deleteTime.generateRequest();
+                this.$.toast.show('Deleted ' + editTime.title);
             },
 
             _saveTime: function(event) {
@@ -345,6 +381,8 @@
                 this.newTime.start = moment(this.newTime.date).hour(this.selectedStartTime)._d.toString();
                 this.newTime.end = moment(this.newTime.date).hour(this.selectedEndTime)._d.toString();
                 this.newTime.description = this.$.description.value;
+
+                console.log(this.newTime);
 
                 this.$.postTime.body = JSON.stringify(this.newTime);
                 this.$.postTime.generateRequest();
