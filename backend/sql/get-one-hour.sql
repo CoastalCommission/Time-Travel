@@ -1,3 +1,3 @@
 SELECT *
 FROM hours_tbl
-WHERE id =
+WHERE hours_tbl.id =

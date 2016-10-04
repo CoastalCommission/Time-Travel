@@ -320,7 +320,7 @@
             },
 
             _aquireTimeDeleteResponse: function(events) {
-                this.$.toast.show(events.detail.response.feedback);
+                this.$.toast.show(events.detail.response.status.feedback);
             },
 
             _gotoToday: function(event) { this.calendar.today() },

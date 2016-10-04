@@ -192,6 +192,7 @@
         });
     })
 
+
     .get('/hours', function(req, res, next) {
         var getHoursSQL = fs.readFileSync(__dirname + '/sql/get-hours.sql', 'utf8');
 
@@ -216,6 +217,106 @@
                 logger.info('GET /hours/' + req.params.id);
                 res.send(resultSet);
             }
+        });
+    })
+
+
+    .get('/projects', function(req, res, next) {
+        var getProjectsSQL = fs.readFileSync(__dirname + '/sql/get-projects.sql', 'utf8');
+
+        db.all(getProjectsSQL, function(err, resultSet) {
+            if(err !== null) {
+                logger.error('GET /projects', err);
+            } else {
+                logger.info('GET /projects');
+                res.send(resultSet);
+            }
+        });
+    })
+
+    .get('/projects/:id', function(req, res, next) {
+        var getOneProjectSQL = fs.readFileSync(__dirname + '/sql/get-one-project.sql', 'utf8') +
+                            req.params.id;
+
+        db.all(getOneProjectSQL, function(err, resultSet) {
+            if(err !== null) {
+                logger.error('GET /projects/' + req.params.id, err);
+            } else {
+                logger.info('GET /projects/' + req.params.id);
+                res.send(resultSet);
+            }
+        });
+    })
+
+    .post('/projects', function(req, res, next) {
+        var project = req.body.project,
+            pca     = req.body.pca,
+            fiscal  = req.body.fiscal;
+
+        db.beginTransaction(function(err, trans) {
+            var addProjectSQL = fs.readFileSync(__dirname + '/sql/add-project.sql', 'utf8');
+
+            trans.run(addProjectSQL + "'" + project + "', '"
+                                          + pca + "', '"
+                                          + fiscal + "')");
+
+            trans.commit(function(err) {
+                if(err) {
+                    logger.error('POST /projects', err);
+                } else {
+                    logger.info('POST /projects');
+
+                    var getProjectsSQL = fs.readFileSync(__dirname + '/sql/get-projects.sql', 'utf8');
+
+                    db.all(getProjectsSQL, function(err, resultSet) {
+                        if(err !== null) {
+                            logger.error('GET /projects', err);
+                        } else {
+                            logger.info('GET /projects');
+                            res.send({
+                                'status': {
+                                    'added': true,
+                                    'feedback': 'New Project Created'
+                                },
+                                'data': resultSet
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    })
+
+    .delete('/projects/:id', function(req, res, next) {
+        db.beginTransaction(function(err, trans) {
+            var deleteProjectSQL = fs.readFileSync(__dirname + '/sql/delete-project.sql', 'utf8');
+
+            trans.run(deleteProjectSQL + req.params.id);
+
+            trans.commit(function(err) {
+                if(err) {
+                    logger.error('DELETE /project/' + req.params.id, err);
+                } else {
+                    logger.info('DELETE /project/' + req.params.id);
+
+                    var getProjectsSQL = fs.readFileSync(__dirname + '/sql/get-projects.sql', 'utf8');
+
+                    db.all(getProjectsSQL, function(err, resultSet) {
+                        if(err !== null) {
+                            logger.error('GET /projects', err);
+                        } else {
+                            logger.info('GET /projects');
+                            res.send({
+                                'status': {
+                                    'deleted': true,
+                                    'feedback': 'Project Deleted'
+                                },
+                                'data': resultSet
+                            });
+                        }
+                    });
+                }
+            });
         });
     });
 
