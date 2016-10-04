@@ -13,6 +13,9 @@
         db      = new trans(new sqlite.Database('time-travel.db')),
         api     = express();
 
+    var initCheckSQL = fs.readFileSync(__dirname + '/sql/init-check.sql', 'utf8'),
+        initDBSQL    = fs.readFileSync(__dirname + '/sql/init-db.sql', 'utf8');
+
     // http://enable-cors.org/server_expressjs.html
     api.all('*', function(req, res, next) {
         res.header('Access-Control-Allow-Origin', '*');
@@ -46,35 +49,27 @@
         ]
     });
 
+
     // Database initialization
-    db.get("SELECT name " +
-           "FROM sqlite_master " +
-           "WHERE type = 'table' " +
-           "AND name = 'time_tbl' ",
+    db.get(initCheckSQL,
         function(err, rows) {
             if(err !== null) {
                 logger.info(err);
             } else if(rows === undefined) {
-                db.run('CREATE TABLE "time_tbl" ' +
-                            '("id"         INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-                            '"title"       VARCHAR(255), ' +
-                            '"start"       VARCHAR(255), ' +
-                            '"end"         VARCHAR(255), ' +
-                            '"description" VARCHAR(255))',
-                            function(err) {
-                                if(err !== null) {
-                                    logger.error(err);
-                                } else {
-                                    logger.info("time-travel.time_tbl table initialized.");
-                                }
-                            });
+                db.run(initDBSQL, function(err) {
+                                    if(err !== null) {
+                                        logger.error(err);
+                                    } else {
+                                        logger.info("time_tbl initialized");
+                                    }
+                                });
             } else {
                 logger.info("Time-Travel DB is Online");
             }
         });
 
     router.get('/time', function(req, res, next) {
-        var sql = "SELECT * FROM time_tbl";
+        var sql = fs.readFileSync(__dirname + '/sql/get-time.sql');
 
         db.all(sql, function(err, resultSet) {
             if(err !== null) {
@@ -93,14 +88,12 @@
             description = req.body.description;
 
         db.beginTransaction(function(err, trans) {
-            trans.run("INSERT INTO 'time_tbl' (title," +
-                                              "start," +
-                                              "end," +
-                                              "description) " +
-                      "VALUES('" + title + "', '"
-                                 + start + "', '"
-                                 + end + "', '"
-                                 + description + "')");
+            var sql = fs.readFileSync(__dirname + '/sql/add-time.sql');
+
+            trans.run(sql + "'" + title + "', '"
+                                + start + "', '"
+                                + end + "', '"
+                                + description + "')");
 
             trans.commit(function(err) {
                 if(err) {
@@ -108,7 +101,7 @@
                 } else {
                     logger.info('POST /time');
 
-                    var sql = "SELECT * FROM time_tbl";
+                    var sql = fs.readFileSync(__dirname + '/sql/get-time.sql');
 
                     db.all(sql, function(err, resultSet) {
                         if(err !== null) {
@@ -131,8 +124,9 @@
 
     .delete('/time/:id', function(req, res, next) {
         db.beginTransaction(function(err, trans) {
-            trans.run('DELETE FROM time_tbl ' +
-                      'WHERE time_tbl.id = ' + req.params.id);
+            var sql = fs.readFileSync(__dirname + '/sql/delete-time.sql');
+
+            trans.run(sql + req.params.id);
 
             trans.commit(function(err) {
                 if(err) {
