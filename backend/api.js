@@ -69,9 +69,9 @@
         });
 
     router.get('/time', function(req, res, next) {
-        var sql = fs.readFileSync(__dirname + '/sql/get-time.sql');
+        var getTimeSQL = fs.readFileSync(__dirname + '/sql/get-time.sql', 'utf8');
 
-        db.all(sql, function(err, resultSet) {
+        db.all(getTimeSQL, function(err, resultSet) {
             if(err !== null) {
                 logger.error('GET /time', err);
             } else {
@@ -88,12 +88,12 @@
             description = req.body.description;
 
         db.beginTransaction(function(err, trans) {
-            var sql = fs.readFileSync(__dirname + '/sql/add-time.sql');
+            var addTimeSQL = fs.readFileSync(__dirname + '/sql/add-time.sql', 'utf8');
 
-            trans.run(sql + "'" + title + "', '"
-                                + start + "', '"
-                                + end + "', '"
-                                + description + "')");
+            trans.run(addTimeSQL + "'" + title + "', '"
+                                       + start + "', '"
+                                       + end + "', '"
+                                       + description + "')");
 
             trans.commit(function(err) {
                 if(err) {
@@ -101,9 +101,9 @@
                 } else {
                     logger.info('POST /time');
 
-                    var sql = fs.readFileSync(__dirname + '/sql/get-time.sql');
+                    var getTimeSQL = fs.readFileSync(__dirname + '/sql/get-time.sql', 'utf8');
 
-                    db.all(sql, function(err, resultSet) {
+                    db.all(getTimeSQL, function(err, resultSet) {
                         if(err !== null) {
                             logger.error('GET /time', err);
                         } else {
@@ -124,9 +124,9 @@
 
     .delete('/time/:id', function(req, res, next) {
         db.beginTransaction(function(err, trans) {
-            var sql = fs.readFileSync(__dirname + '/sql/delete-time.sql');
+            var deleteTimeSQL = fs.readFileSync(__dirname + '/sql/delete-time.sql', 'utf8');
 
-            trans.run(sql + req.params.id);
+            trans.run(deleteTimeSQL + req.params.id);
 
             trans.commit(function(err) {
                 if(err) {
@@ -143,9 +143,10 @@
     })
 
     .get('/time/:id', function(req, res, next) {
-        var sql = "SELECT * FROM time_tbl WHERE id = " + req.params.id;
+        var getOneTimeSQL = fs.readFileSync(__dirname + '/sql/get-one-time.sql', 'utf8') +
+                            req.params.id;
 
-        db.all(sql, function(err, resultSet) {
+        db.all(getOneTimeSQL, function(err, resultSet) {
             if(err !== null) {
                 logger.error('GET /time/' + req.params.id, err);
             } else {
