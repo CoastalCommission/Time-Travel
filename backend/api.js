@@ -190,6 +190,33 @@
                 res.send(resultSet);
             }
         });
+    })
+
+    .get('/hours', function(req, res, next) {
+        var getHoursSQL = fs.readFileSync(__dirname + '/sql/get-hours.sql', 'utf8');
+
+        db.all(getHoursSQL, function(err, resultSet) {
+            if(err !== null) {
+                logger.error('GET /hours', err);
+            } else {
+                logger.info('GET /hours');
+                res.send(resultSet);
+            }
+        });
+    })
+
+    .get('/hours/:id', function(req, res, next) {
+        var getOneHourSQL = fs.readFileSync(__dirname + '/sql/get-one-hour.sql', 'utf8') +
+                            req.params.id;
+
+        db.all(getOneHourSQL, function(err, resultSet) {
+            if(err !== null) {
+                logger.error('GET /hours/' + req.params.id, err);
+            } else {
+                logger.info('GET /hours/' + req.params.id);
+                res.send(resultSet);
+            }
+        });
     });
 
     api.use(router);

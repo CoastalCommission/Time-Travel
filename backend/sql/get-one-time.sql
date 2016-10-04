@@ -1,1 +1,3 @@
-SELECT * FROM time_tbl WHERE id = 
+SELECT *
+FROM time_tbl
+WHERE id = 
