@@ -13,8 +13,13 @@
         db      = new trans(new sqlite.Database('time-travel.db')),
         api     = express();
 
-    var initCheckSQL = fs.readFileSync(__dirname + '/sql/init-check.sql', 'utf8'),
-        initDBSQL    = fs.readFileSync(__dirname + '/sql/init-db.sql', 'utf8');
+    // SQL
+    var initCheckSQL           = fs.readFileSync(__dirname + '/sql/init-check.sql', 'utf8'),
+        initTimeTblSQL         = fs.readFileSync(__dirname + '/sql/init-time-tbl.sql', 'utf8'),
+        initHoursTblSQL        = fs.readFileSync(__dirname + '/sql/init-hours-tbl.sql', 'utf8'),
+        initProjectsTblSQL     = fs.readFileSync(__dirname + '/sql/init-projects-tbl.sql', 'utf8'),
+        populateHoursTblSQL    = fs.readFileSync(__dirname + '/sql/populate-hours-tbl.sql', 'utf8'),
+        populateProjectsTblSQL = fs.readFileSync(__dirname + '/sql/populate-projects-tbl.sql', 'utf8')
 
     // http://enable-cors.org/server_expressjs.html
     api.all('*', function(req, res, next) {
@@ -49,20 +54,51 @@
         ]
     });
 
-
     // Database initialization
     db.get(initCheckSQL,
         function(err, rows) {
             if(err !== null) {
                 logger.info(err);
             } else if(rows === undefined) {
-                db.run(initDBSQL, function(err) {
-                                    if(err !== null) {
-                                        logger.error(err);
-                                    } else {
-                                        logger.info("time_tbl initialized");
-                                    }
-                                });
+                db.run(initTimeTblSQL, function(err) {
+                    if(!err) {
+                        logger.info("time_tbl Initialized");
+                    } else {
+                        logger.error(err);
+                    }
+                });
+
+                db.run(initHoursTblSQL, function(err) {
+                    if(!err) {
+                        logger.info("hours_tbl Initialized");
+
+                        db.run(populateHoursTblSQL, function(err) {
+                            if(!err) {
+                                logger.info("hours_tbl Populated");
+                            } else {
+                                logger.error(err);
+                            }
+                        });
+                    } else {
+                        logger.error(err);
+                    }
+                });
+
+                db.run(initProjectsTblSQL, function(err) {
+                    if(!err) {
+                        logger.info("projects_tbl Initialized");
+
+                        db.run(populateProjectsTblSQL, function(err) {
+                            if(!err) {
+                                logger.info("projects_tbl Populated");
+                            } else {
+                                logger.error(err);
+                            }
+                        });
+                    } else {
+                        logger.error(err);
+                    }
+                });
             } else {
                 logger.info("Time-Travel DB is Online");
             }
