@@ -96,13 +96,13 @@
         </style>
 
         <iron-ajax auto
-                   url="pca.json"
+                   url="http://localhost:3040/projects"
                    method="GET"
                    handle-as="json"
                    on-response="_aquirePCA"></iron-ajax>
 
         <iron-ajax auto
-                   url="hours.json"
+                   url="http://localhost:3040/hours"
                    method="GET"
                    handle-as="json"
                    on-response="_aquireHours"></iron-ajax>

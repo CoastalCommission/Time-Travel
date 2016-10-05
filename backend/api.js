@@ -169,9 +169,23 @@
                     logger.error('DELETE /time/' + req.params.id, err);
                 } else {
                     logger.info('DELETE /time/' + req.params.id);
-                    res.send({
-                        'deleted': true,
-                        'feedback': 'Time Deleted id:' + req.params.id
+
+                    var getTimeSQL = fs.readFileSync(__dirname + '/sql/get-time.sql', 'utf8');
+
+                    db.all(getTimeSQL, function(err, resultSet) {
+                        if(err !== null) {
+                            logger.error('GET /time', err);
+                        } else {
+                            logger.info('GET /time');
+
+                            res.send({
+                                'status': {
+                                    'deleted': true,
+                                    'feedback': 'Time Deleted'
+                                },
+                                'data': resultSet
+                            });
+                        }
                     });
                 }
             });
@@ -306,6 +320,7 @@
                             logger.error('GET /projects', err);
                         } else {
                             logger.info('GET /projects');
+
                             res.send({
                                 'status': {
                                     'deleted': true,
