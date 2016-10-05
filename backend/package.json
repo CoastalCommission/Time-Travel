@@ -4,15 +4,20 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./api.js localhost 3040",
+    "prod": "pm2 start ./api.js"
   },
   "author": "California Coastal Commission - Zachariah Moreno",
   "license": "UNLICENSED",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "pm2": "^2.0.18",
     "sqlite3": "^3.1.4",
     "sqlite3-transactions": "0.0.5",
     "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.2"
   }
 }

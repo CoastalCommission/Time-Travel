@@ -8,7 +8,7 @@ Record & Report All Time & Travel
 These commands install all dependencies
 
     git clone git@github.com:CoastalCommission/Time-Travel.git && cd Time-Travel
-    npm install -g electron polymer-cli
+    npm install -g electron polymer-cli pm2
     cd backend && npm install
     cd ../frontend && npm install && bower install
 
