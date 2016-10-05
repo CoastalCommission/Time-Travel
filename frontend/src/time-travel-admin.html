@@ -34,6 +34,14 @@
                 max-width: 70vw;
                 margin: auto;
             }
+
+            h1, h2, h3, h4, h5 {
+                font-weight: normal;
+            }
+
+            .light-text {
+                font-weight: 100;
+            }
         </style>
 
         <iron-ajax auto
@@ -41,6 +49,12 @@
                    method="GET"
                    handle-as="json"
                    on-response="_getProjects"></iron-ajax>
+
+        <iron-ajax id="deleteProject"
+                   url="http://localhost:3040/projects"
+                   method="DELETE"
+                   handle-as="json"
+                   on-response="_getProjectDeleteResponse"></iron-ajax>
 
         <paper-toast id="toast"></paper-toast>
 
@@ -62,7 +76,7 @@
         <paper-dialog id="dialog"
                       entry-animation="scale-up-animation"
                       exit-animation="scale-down-animation">
-            <h1>Edit {{ dialog.project }}</h1>
+            <h1><span class="light-text">Edit</span> {{ dialog.project }}</h1>
 
             <form is="iron-form"
                 id="prjectForm"
@@ -108,13 +122,17 @@
             _editProject: function(event) {
                 Polymer.dom(this.root).querySelector('#dialog').open();
 
-                this.dialog = {
-                    'project': event.model.__data__.item.project,
-                    'pca': event.model.__data__.item.pca,
-                    'fiscal': event.model.__data__.item.fiscal
-                };
+                this.dialog = event.model.__data__.item;
+            },
 
-                console.log(this.dialog);
+            _getProjectDeleteResponse: function(events) {
+                this.$.toast.show(events.detail.response.status.feedback);
+                this.projects = events.detail.response.data;
+            },
+
+            _deleteProject: function(event) {
+                this.$.deleteProject.url = 'http://localhost:3040/projects/' +  this.dialog.id;
+                this.$.deleteProject.generateRequest();
             },
 
             _getProjects: function(projects) {
