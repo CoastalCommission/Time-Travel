@@ -12,6 +12,8 @@ These commands install all dependencies
     cd backend && npm install
     cd ../frontend && npm install && bower install
 
+Configure your LDAP connection by editing the values in `frontend/ldap-config.js`
+
 ### Launch Backend
 
 This command initializes a new time-travel SQLite DB and or launches the API at `localhost:3040/time`
