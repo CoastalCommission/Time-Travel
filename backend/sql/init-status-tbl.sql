@@ -1,0 +1,3 @@
+CREATE TABLE 'status_tbl'
+('id'    INTEGER PRIMARY KEY AUTOINCREMENT,
+'status' VARCHAR(255));

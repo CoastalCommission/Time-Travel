@@ -18,8 +18,10 @@
         initTimeTblSQL         = fs.readFileSync(__dirname + '/sql/init-time-tbl.sql', 'utf8'),
         initHoursTblSQL        = fs.readFileSync(__dirname + '/sql/init-hours-tbl.sql', 'utf8'),
         initProjectsTblSQL     = fs.readFileSync(__dirname + '/sql/init-projects-tbl.sql', 'utf8'),
+        initStatusTblSQL       = fs.readFileSync(__dirname + '/sql/init-status-tbl.sql', 'utf8'),
         populateHoursTblSQL    = fs.readFileSync(__dirname + '/sql/populate-hours-tbl.sql', 'utf8'),
-        populateProjectsTblSQL = fs.readFileSync(__dirname + '/sql/populate-projects-tbl.sql', 'utf8')
+        populateProjectsTblSQL = fs.readFileSync(__dirname + '/sql/populate-projects-tbl.sql', 'utf8'),
+        populateStatusTblSQL   = fs.readFileSync(__dirname + '/sql/populate-status-tbl.sql', 'utf8');
 
     // http://enable-cors.org/server_expressjs.html
     api.all('*', function(req, res, next) {
@@ -99,6 +101,22 @@
                         logger.error(err);
                     }
                 });
+
+                db.run(initStatusTblSQL, function(err) {
+                    if(!err) {
+                        logger.info("status_tbl Initialized");
+
+                        db.run(populateStatusTblSQL, function(err) {
+                            if(!err) {
+                                logger.info("status_tbl Populated");
+                            } else {
+                                logger.error(err);
+                            }
+                        });
+                    } else {
+                        logger.error(err);
+                    }
+                });
             } else {
                 logger.info("Time-Travel DB is Online");
             }
@@ -121,7 +139,8 @@
         var title       = req.body.title,
             start       = req.body.start,
             end         = req.body.end,
-            description = req.body.description;
+            description = req.body.description,
+            status      = req.body.status;
 
         db.beginTransaction(function(err, trans) {
             var addTimeSQL = fs.readFileSync(__dirname + '/sql/add-time.sql', 'utf8');
@@ -129,7 +148,8 @@
             trans.run(addTimeSQL + "'" + title + "', '"
                                        + start + "', '"
                                        + end + "', '"
-                                       + description + "')");
+                                       + description + "', '"
+                                       + status + "')");
 
             trans.commit(function(err) {
                 if(err) {
