@@ -37,10 +37,20 @@
 
             h1, h2, h3, h4, h5 {
                 font-weight: normal;
+                max-width: 70vw;
+                margin: auto;
             }
 
             .light-text {
                 font-weight: 100;
+            }
+
+            #pca {
+                margin-right: 5%;
+            }
+
+            #fiscal {
+                margin-left: 5%;
             }
         </style>
 
@@ -58,20 +68,24 @@
 
         <paper-toast id="toast"></paper-toast>
 
-        <div id="" class="card layout center flex">
-            <div role="listbox">
-                <template is="dom-repeat" items="{{ projects }}">
-                    <paper-icon-item on-click="_editProject">
-                        <paper-icon-button icon="editor:mode-edit" item-icon></paper-icon-button>
+        <div class="layout center flex">
+            <h1 class="light-text center-text">Admin</h1>
 
-                        <paper-item-body two-line>
-                            <div><strong>{{ item.project }}</strong></div>
-                            <div>{{ item.pca }}</div>
-                        </paper-item-body>
-                    </paper-icon-item>
-                </template>
-            </div>
-        </div> <!-- end .card -->
+            <div id="" class="card">
+                <div role="listbox">
+                    <template is="dom-repeat" items="{{ projects }}">
+                        <paper-icon-item on-click="_editProject">
+                            <paper-icon-button icon="editor:mode-edit" item-icon></paper-icon-button>
+
+                            <paper-item-body two-line>
+                                <div><strong>{{ item.project }}</strong></div>
+                                <div>{{ item.pca }}</div>
+                            </paper-item-body>
+                        </paper-icon-item>
+                    </template>
+                </div>
+            </div> <!-- end .card -->
+        </div> <!-- end .layout -->
 
         <paper-dialog id="dialog"
                       entry-animation="scale-up-animation"
@@ -83,17 +97,24 @@
                 method="POST"
                 action="">
 
-                <paper-input label="Project"
-                             id="project"
-                             value="{{ dialog.project }}"></paper-input>
+                <div class="layout horizontal">
+                    <paper-input label="Project"
+                                 id="project"
+                                 class="flex"
+                                 value="{{ dialog.project }}"></paper-input>
+                </div> <!-- end layout -->
 
-                <paper-input label="PCA"
-                             id="pca"
-                             value="{{ dialog.pca }}"></paper-input>
+                <div class="layout horizontal around-justified">
+                    <paper-input label="PCA"
+                                 id="pca"
+                                 class="flex"
+                                 value="{{ dialog.pca }}"></paper-input>
 
-                <paper-input label="Fiscal"
-                             id="fiscal"
-                             value="{{ dialog.fiscal }}"></paper-input>
+                    <paper-input label="Fiscal"
+                                 id="fiscal"
+                                 class="flex"
+                                 value="{{ dialog.fiscal }}"></paper-input>
+                </div> <!-- end layout -->
 
                 <div class="buttons">
                     <paper-button dialog-dismiss>Cancel</paper-button>
