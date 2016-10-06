@@ -15,14 +15,9 @@
         api          = express(),
         router       = express.Router(),
         LdapStrategy = require('passport-ldapauth'),
+        LdapConfig   = require('./ldap-config.js'),
         config       = {
-            server: {
-                url: 'ldap://111.111.111:389',
-                bindDn: 'cn=root',
-                bindCredentials: 'secret',
-                searchBase: 'ou=passport-ldapauth',
-                searchFilter: '(uid={{username}})'
-            }
+            server: LdapConfig
         };
 
     // http://enable-cors.org/server_expressjs.html
