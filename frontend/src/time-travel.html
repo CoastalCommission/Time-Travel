@@ -8,10 +8,13 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="time-travel">
     <template>
@@ -31,7 +34,13 @@
                 --paper-icon-button-ink-color: white;
             }
 
-            app-toolbar span {
+            paper-toolbar {
+                font-weight: normal;
+                font-size: 20px;
+                color: white;
+            }
+
+            paper-toolbar span {
                 font-weight: 100;
             }
 
@@ -50,6 +59,14 @@
             .drawer-list a.iron-selected {
                 color: white;
                 font-weight: bold;
+            }
+
+            paper-toolbar {
+                --paper-toolbar-background: #37474F;
+            }
+
+            paper-progress {
+               --paper-progress-active-color: #00B8D4;
             }
 
             /*paper-icon-button {
@@ -71,10 +88,10 @@
             <!-- Main content -->
             <app-header-layout has-scrolling-region>
                 <app-header condenses reveals effects="waterfall">
-                    <app-toolbar tall>
+                    <paper-toolbar class="layout horizontal">
                         <paper-icon-button icon="image:blur-on" on-tap=""></paper-icon-button>
 
-                        <div main-title flex>
+                        <div main-title flex class="title">
                             <iron-selector selected="[[ page ]]" attr-for-selected="name" class="drawer-list flex" role="navigation">
                                 <a name="calendar" href="/calendar">
                                     Time <span>Travel</span>
@@ -82,8 +99,11 @@
                             </iron-selector>
                         </div>
 
-                        <!-- <paper-icon-button icon="search" on-tap=""></paper-icon-button> -->
-                    </app-toolbar>
+                        <div class="flex"></div>
+
+                        <paper-icon-button icon="search" on-tap="_openSearch"></paper-icon-button>
+                        <paper-progress class="middle fit" value="100" id="progress"></paper-progress>
+                    </paper-toolbar>
                 </app-header>
 
                 <iron-pages role="main" selected="[[ page ]]" attr-for-selected="name">

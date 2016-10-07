@@ -90,8 +90,10 @@
                 margin: 0 5%;
             }
 
-            --fullcalendar {
-
+            td.fc-day.fc-widget-content:hover {
+                content: 'add time';
+                text-align: center;
+                color: grey;
             }
         </style>
 
@@ -136,8 +138,6 @@
 
                 <paper-icon-button id="next" icon="chevron-right" on-transitionend="_next"></paper-icon-button>
             </h1>
-
-            <paper-icon-button icon="search" on-tap="_openSearch"></paper-icon-button>
 
             <paper-menu-button>
                 <paper-icon-button icon="{{ selectedViewIcon }}" class="dropdown-trigger"></paper-icon-button>
